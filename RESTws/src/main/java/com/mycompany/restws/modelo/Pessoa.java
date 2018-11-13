@@ -5,6 +5,12 @@
  */
 package com.mycompany.restws.modelo;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -18,18 +24,42 @@ import javax.xml.bind.annotation.XmlType;
     Uusuário:
         Nome, Sobrenome, Data de Nascimento, Sexo, E-mail ,Telefone ,Login , Senha 
 */
+@Entity
+@Table(name="pessoa")
+
 @XmlRootElement(name = "pessoa") 
 @XmlType(propOrder={"id","nome","sobreNome","dataNascimento","sexo","email","telefone","login","senha"})
 public class Pessoa {
-    private String nome;
-    private String sobreNome;
-    private String dataNascimento;
-    private String sexo;
-    private String email;
-    private String telefone;
-    private String login;
-    private String senha;
+    
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="id")
     private int id;
+    
+    @Column(name="nome")
+    private String nome;
+    
+    @Column(name="sobrenome")
+    private String sobreNome;
+    
+    @Column(name="data_nasc")
+    private String dataNascimento;
+    
+    @Column(name="sexo")
+    private String sexo;
+    
+    @Column(name="email")
+    private String email;
+    
+    @Column(name="telefone")
+    private String telefone;
+    
+    @Column(name="login")
+    private String login;
+    
+    @Column(name="senha")
+    private String senha;
+    
 
     @XmlElement
     public String getNome() {

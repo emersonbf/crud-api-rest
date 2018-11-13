@@ -1,6 +1,7 @@
 
 package com.mycompany.restws.servico;
 
+import com.mycompany.restws.dao.PessoaDao;
 import com.mycompany.restws.modelo.Pessoa;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,7 @@ import javax.ws.rs.core.MediaType;
 @Path("servico")
 public class Servico {
     
+ /* PARA TESTE
     
     // Simular um banco de dados ( PARA TESTE )
     private static Map<Integer, Pessoa> pessoas = new HashMap<Integer, Pessoa>();
@@ -43,29 +45,39 @@ public class Servico {
             pessoas.put(id, pessoa);
         }
     }
+*/   
+
+    private PessoaDao pessoaDao = new PessoaDao();
     
     // Mérodo para retornar um objeto do tipo pessoa
     @GET
     @Path("/getPessoaByIdXML/{id}")
     @Produces(MediaType.APPLICATION_XML)
     public Pessoa getPessoaByIdXML(@PathParam("id")int id){
-        return pessoas.get(id);
+        return pessoaDao.getPessoaById(id);
     }
     
     @GET
     @Path("/getPessoaByIdJSON/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Pessoa getPessoaByIdJSON(@PathParam("id")int id){
-        return pessoas.get(id);
+        return pessoaDao.getPessoaById(id);
     }
     
     // Método para retornar uma lista de objetos do tipo pessoa
     @GET
-    @Path("/getPessoaInXML")
+    @Path("/getPessoasInXML")
     @Produces(MediaType.APPLICATION_XML)
-    public List<Pessoa> getPessoaInXML(){
-        return new ArrayList<Pessoa>(pessoas.values());
+    public List<Pessoa> getPessoasInXML(){
+        return pessoaDao.getPessoas();
     }
     
+    // ERROR
+    @GET
+    @Path("/getPessoasInJSON")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Pessoa> getPessoasInJSON(){
+        return pessoaDao.getPessoas();
+    }
     
 }
