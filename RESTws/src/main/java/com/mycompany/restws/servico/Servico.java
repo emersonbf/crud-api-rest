@@ -49,7 +49,7 @@ public class Servico {
 
     private PessoaDao pessoaDao = new PessoaDao();
     
-    // Mérodo para retornar um objeto do tipo pessoa
+    // Mérodo para RETORNAR uma Pessoa em XML
     @GET
     @Path("/getPessoaByIdXML/{id}")
     @Produces(MediaType.APPLICATION_XML)
@@ -57,6 +57,7 @@ public class Servico {
         return pessoaDao.getPessoaById(id);
     }
     
+    // Mérodo para RETORNAR uma Pessoa em JSON
     @GET
     @Path("/getPessoaByIdJSON/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,7 +65,7 @@ public class Servico {
         return pessoaDao.getPessoaById(id);
     }
     
-    // Método para retornar uma lista de objetos do tipo pessoa
+    // Método para RETORNAR uma lista de Pessoa em XML
     @GET
     @Path("/getPessoasInXML")
     @Produces(MediaType.APPLICATION_XML)
@@ -73,11 +74,88 @@ public class Servico {
     }
     
     // ERROR
+    // Método para RETORNAR uma lista de Pessoa em JSON
     @GET
     @Path("/getPessoasInJSON")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Pessoa> getPessoasInJSON(){
         return pessoaDao.getPessoas();
+    }
+    
+    // Método para INSERIR Pessoa, com retorno em JSON
+    @GET
+    @Path("/salvarPessoa/{nome}/{sobreNome}/{data_nasc}/{sexo}/{email}/{telefone}/{login}/{senha}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String savarNovaPessoa(@PathParam("nome") String nome,
+                                  @PathParam("sobreNome") String sobreNome,
+                                  @PathParam("data_nasc") String dataNascimento,
+                                  @PathParam("sexo") String sexo,
+                                  @PathParam("email") String email,
+                                  @PathParam("telefone") String telefone,
+                                  @PathParam("login") String login,
+                                  @PathParam("senha") String senha ){
+        
+        Pessoa pessoa = new Pessoa();
+        
+        pessoa.setNome(nome);
+        pessoa.setSobreNome(sobreNome);
+        pessoa.setDataNascimento(dataNascimento);
+        pessoa.setSexo(sexo);
+        pessoa.setEmail(email);
+        pessoa.setTelefone(telefone);
+        pessoa.setLogin(login);
+        pessoa.setSenha(senha);
+        
+        if( !pessoaDao.salvarPessoa(pessoa) ){
+            return "(\"status\":\"OK\")";
+        }else {
+            return "(\"status\":\"ERROR NOT OK\")";
+        }
+    }
+    
+    // Método para ATUALIZAR Pessoa, com retorno em JSON
+    @GET
+    @Path("/salvarPessoa/{id}/{nome}/{sobreNome}/{data_nasc}/{sexo}/{email}/{telefone}/{login}/{senha}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String atualizarPessoa(@PathParam("id") int id,
+                                  @PathParam("nome") String nome,
+                                  @PathParam("sobreNome") String sobreNome,
+                                  @PathParam("data_nasc") String dataNascimento,
+                                  @PathParam("sexo") String sexo,
+                                  @PathParam("email") String email,
+                                  @PathParam("telefone") String telefone,
+                                  @PathParam("login") String login,
+                                  @PathParam("senha") String senha ){
+        
+        Pessoa pessoa = new Pessoa();
+        pessoa.setId(id);
+        pessoa.setNome(nome);
+        pessoa.setSobreNome(sobreNome);
+        pessoa.setDataNascimento(dataNascimento);
+        pessoa.setSexo(sexo);
+        pessoa.setEmail(email);
+        pessoa.setTelefone(telefone);
+        pessoa.setLogin(login);
+        pessoa.setSenha(senha);
+ 
+        if( !pessoaDao.salvarPessoa(pessoa) ){
+            return "(\"status\":\"OK\")";
+        }else {
+            return "(\"status\":\"ERROR NOT OK\")";
+        }
+    }
+    
+    // Método para DELETAR Pessoa, com retorno em JSON
+    @GET
+    @Path("/deletePessoa/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deletePessoaById(@PathParam("id") int id){
+        
+         if( !pessoaDao.deletePessoa(id) ){
+            return "(\"status\":\"OK\")";
+        }else {
+            return "(\"status\":\"ERROR NOT OK\")";
+        }
     }
     
 }

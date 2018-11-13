@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.mycompany.restws.dao;
 
 import com.mycompany.restws.modelo.Pessoa;
@@ -13,7 +9,8 @@ import org.hibernate.SessionFactory;
 
 /**
  *
- * @author User
+ *  @author Emerson Borges Ferreira
+ *  Eng. Computação
  */
 public class PessoaDao {
     
@@ -65,5 +62,58 @@ public class PessoaDao {
         
         return pessoas;
     }
+    
+    
+    //Método para inserir nova pessoa ou atualizar
+    public boolean salvarPessoa (Pessoa pessoa){
+        Session session = null;
+        boolean status_erro = false;
+        
+        try{
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.saveOrUpdate(pessoa);
+            session.getTransaction().commit();
+            
+        }catch(Exception e){
+            if(session != null){
+                session.getTransaction().rollback();
+            }
+            status_erro = true;
+            
+        }finally{
+            if(session != null){
+                session.close();
+            }
+        }
+        
+        return status_erro;
+    }
+    
+    public boolean deletePessoa(int id){
+        
+        Session session = null;
+        boolean status_erro = false;
+        
+        try{
+            session = sessionFactory.openSession();
+            session.beginTransaction();
+            session.createQuery("delete Pessoa where id = :id").setParameter("id", id).executeUpdate();
+            session.getTransaction().commit();
+            
+        }catch(Exception e){
+            if(session != null ){
+                session.getTransaction().rollback();
+            }
+            status_erro = true;
+        }finally {
+            if(session != null ){
+                session.close();
+            }
+        }
+        
+        return status_erro;
+    }
+    
     
 }
