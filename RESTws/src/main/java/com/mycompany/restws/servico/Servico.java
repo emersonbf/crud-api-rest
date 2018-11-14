@@ -22,31 +22,6 @@ import javax.ws.rs.core.MediaType;
 @Path("servico")
 public class Servico {
     
- /* PARA TESTE
-    
-    // Simular um banco de dados ( PARA TESTE )
-    private static Map<Integer, Pessoa> pessoas = new HashMap<Integer, Pessoa>();
-    
-    // Dados para teste
-    static{
-        for (int i=0; i<10; i++){
-            Pessoa pessoa = new Pessoa();
-            int id = i + 1;
-            pessoa.setId(id);
-            pessoa.setNome("Nome"+id);
-            pessoa.setSobreNome("Sobrenome"+id);
-            pessoa.setDataNascimento("01/01/2001");
-            pessoa.setSexo("Masc");
-            pessoa.setEmail("teste@teste.com");
-            pessoa.setTelefone("9 99999999");
-            pessoa.setLogin("user"+id);
-            pessoa.setSenha("pass");
-            
-            pessoas.put(id, pessoa);
-        }
-    }
-*/   
-
     private PessoaDao pessoaDao = new PessoaDao();
     
     // Mérodo para RETORNAR uma Pessoa em XML
@@ -73,13 +48,21 @@ public class Servico {
         return pessoaDao.getPessoas();
     }
     
-    // ERROR
     // Método para RETORNAR uma lista de Pessoa em JSON
     @GET
     @Path("/getPessoasInJSON")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Pessoa> getPessoasInJSON(){
-        return pessoaDao.getPessoas();
+        
+        List<Pessoa> listaPessoa = null;
+        
+        try{
+            listaPessoa = pessoaDao.getPessoas();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return listaPessoa;
     }
     
     // Método para INSERIR Pessoa, com retorno em JSON
