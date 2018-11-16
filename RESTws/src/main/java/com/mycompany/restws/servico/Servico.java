@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ws.rs.GET;
+import static javax.ws.rs.HttpMethod.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -64,6 +65,13 @@ public class Servico {
         
         return listaPessoa;
     }
+    
+    // Testar receber JSON
+    /*
+        @POST
+        @Consumes({"URL/json"})
+        @Path("salvarPessoa/inserir")
+    */
     
     // Método para INSERIR Pessoa, com retorno em JSON
     @GET
