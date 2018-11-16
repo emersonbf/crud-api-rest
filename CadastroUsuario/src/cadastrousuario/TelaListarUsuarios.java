@@ -1,18 +1,37 @@
 
 package cadastrousuario;
 
+import Modelo.Pessoa;
+import Requisicao.HttpRequisicao;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Emerson Borges Ferreira
  *  Eng. Computação
+ * 
  */
 public class TelaListarUsuarios extends javax.swing.JFrame {
-
+    
+    TelaExcluirUsuario objExcluir;
+    TelaEditarUsuario objEditar;
+    ArrayList<Integer> idsTabela = new ArrayList<Integer>(); 
+    List<Pessoa> listaPessoa;
+    
     /**
      * Creates new form TelaListarUsuarios
      */
     public TelaListarUsuarios() {
+        
         initComponents();
+        
+        ler_JTable();
+        
     }
 
     /**
@@ -27,15 +46,15 @@ public class TelaListarUsuarios extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableLista = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnCancelarLista = new javax.swing.JButton();
+        btnExcluirLista = new javax.swing.JButton();
+        btnEditarLista = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Pesquisa Usuários");
         setResizable(false);
 
         jTableLista.setModel(new javax.swing.table.DefaultTableModel(
@@ -59,18 +78,26 @@ public class TelaListarUsuarios extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTableLista);
 
-        jButton1.setText("Cancelar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCancelarLista.setText("Fechar");
+        btnCancelarLista.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCancelarListaActionPerformed(evt);
             }
         });
 
-        jButton2.setText("jButton2");
+        btnExcluirLista.setText("Excluir");
+        btnExcluirLista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirListaActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("jButton3");
-
-        jButton4.setText("jButton4");
+        btnEditarLista.setText("Editar");
+        btnEditarLista.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarListaActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Selecione um usuário na lista, e escolha uma das opções. ");
 
@@ -81,35 +108,32 @@ public class TelaListarUsuarios extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addComponent(jScrollPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
-                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 142, Short.MAX_VALUE)
+                        .addComponent(btnEditarLista, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)
+                        .addComponent(btnExcluirLista, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)))
+                        .addComponent(btnCancelarLista, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
+                .addGap(6, 6, 6)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
-                    .addComponent(jButton4)
+                    .addComponent(btnCancelarLista)
+                    .addComponent(btnExcluirLista)
+                    .addComponent(btnEditarLista)
                     .addComponent(jLabel3))
-                .addContainerGap())
+                .addGap(4, 4, 4))
         );
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/icone96.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/pesquisa_usuario72.png"))); // NOI18N
 
         jLabel2.setText("Usuários Cadastrados");
 
@@ -118,11 +142,11 @@ public class TelaListarUsuarios extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(2, 2, 2)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addGap(2, 2, 2))
             .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
+                .addGap(32, 32, 32)
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
@@ -132,23 +156,63 @@ public class TelaListarUsuarios extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(28, 28, 28)))
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, Short.MAX_VALUE)
-                .addGap(2, 2, 2))
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCancelarListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarListaActionPerformed
         // TODO add your handling code here:
-         dispose(); // Volta para tela principal
-    }//GEN-LAST:event_jButton1ActionPerformed
+         dispose(); // Fecha Janela
+    }//GEN-LAST:event_btnCancelarListaActionPerformed
+
+    private void btnExcluirListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirListaActionPerformed
+        // TODO add your handling code here:
+
+        if( jTableLista.getSelectedRow() != -1 ) {
+            if(objExcluir == null){
+               objExcluir = new TelaExcluirUsuario(); 
+               objExcluir.setVisible(true);
+               objExcluir.recebeUsuarioParaExcluir( listaPessoa.get( idsTabela.get(jTableLista.getSelectedRow())) );
+               dispose();
+            }else{
+                objExcluir.setVisible(true);
+                objExcluir.setState(TelaExcluirUsuario.NORMAL);
+                objExcluir.recebeUsuarioParaExcluir( listaPessoa.get( idsTabela.get(jTableLista.getSelectedRow())) );
+                dispose();
+            }   
+        }else{
+            JOptionPane.showMessageDialog(null, "Selecione um usuário!");
+        }
+    }//GEN-LAST:event_btnExcluirListaActionPerformed
+
+    private void btnEditarListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarListaActionPerformed
+        // TODO add your handling code here:
+
+         if( jTableLista.getSelectedRow() != -1 ) {
+            if(objEditar == null){
+               objEditar = new TelaEditarUsuario(); 
+               objEditar.setVisible(true);
+               objEditar.recebeUsuarioParaEditar( listaPessoa.get( idsTabela.get(jTableLista.getSelectedRow())) );
+               dispose();
+            }else{
+                objEditar.setVisible(true);
+                objEditar.setState(TelaExcluirUsuario.NORMAL);
+                objEditar.recebeUsuarioParaEditar( listaPessoa.get( idsTabela.get(jTableLista.getSelectedRow())) );
+                dispose();
+            }   
+        }else{
+            JOptionPane.showMessageDialog(null, "Selecione um usuário!");
+        }
+        
+        
+    }//GEN-LAST:event_btnEditarListaActionPerformed
 
     /**
      * @param args the command line arguments
@@ -181,15 +245,47 @@ public class TelaListarUsuarios extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new TelaListarUsuarios().setVisible(true);
+                
             }
         });
     }
+    
+    
+    public void ler_JTable(){
+        
+        DefaultTableModel modelo = (DefaultTableModel) jTableLista.getModel();
+        modelo.setNumRows(0); // Evitar repetição das linhas
+    
+        HttpRequisicao req = new HttpRequisicao();
+        Gson g = new Gson();
+ 
+        try{
+            String jsonResp = req.sendGet("getPessoasInJSON");
+
+            java.lang.reflect.Type ListPessoaType = new TypeToken<List<Pessoa>>(){}.getType();
+            listaPessoa = g.fromJson(jsonResp, ListPessoaType);
+
+            for(int i=0;i<listaPessoa.size();i++){
+
+                modelo.addRow(new Object[]{
+                    listaPessoa.get(i).getNome(),
+                    listaPessoa.get(i).getSobreNome(),
+                    listaPessoa.get(i).getLogin(),
+                    listaPessoa.get(i).getEmail()
+                });
+                idsTabela.add(i);
+            } 
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Erro ao buscar usuários!" );
+        }
+        
+    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton btnCancelarLista;
+    private javax.swing.JButton btnEditarLista;
+    private javax.swing.JButton btnExcluirLista;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -1,7 +1,11 @@
 
 package cadastrousuario;
 
+import Modelo.Pessoa;
+import Requisicao.HttpRequisicao;
+import code.TrataSenha;
 import code.Validacao;
+import com.google.gson.Gson;
 import javax.swing.JOptionPane;
 
 /**
@@ -10,19 +14,17 @@ import javax.swing.JOptionPane;
  *  Eng. Computação
  * 
  */
-public class CadastroUsiario extends javax.swing.JFrame {
+public class TelaCadastroUsuario extends javax.swing.JFrame {
 
     /**
      * Creates new form CadastroUsiario
      */
-    public CadastroUsiario() {
+    public TelaCadastroUsuario() {
         initComponents();
         
         ComboBoxSexo.addItem("Masculino");
         ComboBoxSexo.addItem("Feminino");
-        
-        
-        
+       
     }
 
     /**
@@ -60,9 +62,10 @@ public class CadastroUsiario extends javax.swing.JFrame {
         txtTelefone = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Cadastro de Usuário");
         setResizable(false);
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/icone96.png"))); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/cadastro_usuario72.png"))); // NOI18N
         jLabel2.setText("jLabel2");
 
         jLabel3.setText("Cadastro de Usuário");
@@ -198,14 +201,14 @@ public class CadastroUsiario extends javax.swing.JFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(msgNivelSenha)))
+                                        .addComponent(msgNivelSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(8, 8, 8)))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jLabel5))
@@ -240,7 +243,7 @@ public class CadastroUsiario extends javax.swing.JFrame {
                     .addComponent(msgNivelSenha))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(4, 4, 4))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -254,9 +257,9 @@ public class CadastroUsiario extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addGap(190, 190, 190))
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(12, 12, 12)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(2, 2, 2))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -274,17 +277,127 @@ public class CadastroUsiario extends javax.swing.JFrame {
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
+        HttpRequisicao req = new HttpRequisicao();
+        Gson g = new Gson();
+        Pessoa p = new Pessoa();
         
-       
-        
-        
-        
-        
-        
+        if( validarInformacoes(p) ) {
+            try{
+                String metodo = "salvarPessoa/";
+                String dadosPessoaURL = metodo
+                                     + ""+p.getNome()+"/"
+                                     + ""+p.getSobreNome()+"/"
+                                     + ""+p.getDataNascimento()+"/"
+                                     + ""+p.getSexo()+"/"
+                                     + ""+p.getEmail()+"/"
+                                     + ""+p.getTelefone()+"/"
+                                     + ""+p.getLogin()+"/"
+                                     + ""+p.getSenha()+"";
+
+                dadosPessoaURL = dadosPessoaURL.replace(" ", "%20");
+                String resp = req.sendGet(dadosPessoaURL);  
+
+                JOptionPane.showMessageDialog(null, "Usuário cadastrado com sucesso! ");
+                limparCampos();
+            }catch (Exception e){
+                JOptionPane.showMessageDialog(null, "Erro ao cadastrar usuário. ");
+            }
+        }
+            
     }//GEN-LAST:event_btnSalvarActionPerformed
 
+    private boolean validarInformacoes (Pessoa p){
+        Validacao valida = new Validacao();
+        boolean status = true;
+        
+        // Validar Nome e Sobrenome
+        if( valida.ValidaNome(txtNome.getText() ) ){
+            p.setNome(txtNome.getText());
+            
+            if( valida.ValidaSobrenome( txtSobrenome.getText() ) ){
+                p.setSobreNome(txtSobrenome.getText());
+            }else{
+                JOptionPane.showMessageDialog(null, "Sobrenome Invalido !" );
+                status = false;
+                return status;
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Nome Invalido !" );
+            status = false;
+            return status;
+        }
+        
+        // Validar Data de Nascimento
+        if( valida.ValidaData(txtDataNascimento.getText()) && valida.ValidaDataFutura(txtDataNascimento.getText()) ){
+             p.setDataNascimento(txtDataNascimento.getText().replace("/", "-"));
+        }else {
+            JOptionPane.showMessageDialog(null, "Data de Nascimento Invalida!" );
+            status = false;
+            return status;
+        }
+     
+        // Sexo não precisa de validação
+        p.setSexo((String)ComboBoxSexo.getSelectedItem()); 
+        
+        // Valida email
+        if(valida.ValidaEmail(txtEmail.getText()) ){
+            p.setEmail(txtEmail.getText());
+        }else{
+            JOptionPane.showMessageDialog(null, "Email Invalido!" );
+            status = false;
+            return status;
+        }
+        
+        // Telefone é campo obrigatório
+        String telefone = txtTelefone.getText();
+        telefone = telefone.replace("(", "");
+        telefone = telefone.replace(")", "");
+        telefone = telefone.replace(" ", "");
+        telefone = telefone.replace("-", "");
+        if( telefone.equals("") || (telefone.length()< 10) ){
+            JOptionPane.showMessageDialog(null, "Informe um numero de telefone fixo valido!" );
+            status = false;
+            return status;
+        }else{
+           p.setTelefone(txtTelefone.getText());
+        }
+        
+        // login é campo obrigatório
+        if( (txtLogin.getText().equals("")) || (txtLogin.getText().length()< 4) ){
+            JOptionPane.showMessageDialog(null, "Informe um login com mínimo de 4 caracteres!" );
+            status = false;
+            return status;
+        }else{
+            for( int i=0; i<txtLogin.getText().length(); i++ ){
+                if( txtLogin.getText().charAt(i) == ' ' ){
+                    JOptionPane.showMessageDialog(null, "Login não pode conter espaço." );
+                    status = false;
+                    return status;
+                }
+            }
+            p.setLogin(txtLogin.getText());
+        }
+        
+        // Validação da Senha
+        if( valida.ValidaSenha(txtSenha.getText()) >= 0 ){
+            // Codificar SENHA, antes de inserir no banco de dados
+            String senha = new String(txtSenha.getPassword());
+            p.setSenha(senha);
+        }else{
+            JOptionPane.showMessageDialog(null, "Senha deve conter letras e números, mínimo 4 caracteres!" );
+            status = false;
+            return status;
+        }
+       
+        return status;
+    }
+    
+    
     private void btnLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimparActionPerformed
         // TODO add your handling code here:
+        
+        limparCampos();
+        
     }//GEN-LAST:event_btnLimparActionPerformed
 
     private void btnListaUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListaUsuariosActionPerformed
@@ -305,15 +418,27 @@ public class CadastroUsiario extends javax.swing.JFrame {
     private void txtSenhaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSenhaKeyReleased
         // TODO add your handling code here:
         
-        // TRATAR AQUI A FORÇA DA SENHA EM TEMPO REAL,
-        // SE A SENHA FOR FRACA, Avisar usuario e pedir para informar nova senha !!!
+        // SE A SENHA FOR Invalida (minimo 4 caracteres com um numero, Avisar usuario e pedir para informar nova senha !!!
         // Senhas: Fraca, Média, Forte
-        // Mostrar força da senha na label: msgNivelSenha
-        
-        //JOptionPane.showMessageDialog(null, "Digitou:" + txtSenha.getText());
-       
-        
-        
+        // Mostra a força da senha na label: msgNivelSenha
+        Validacao valida = new Validacao();
+        int statusSenha = valida.ValidaSenha(txtSenha.getText());
+
+        switch (statusSenha) {
+            case -1:
+                msgNivelSenha.setText("Invalida");
+                break;
+            case 0:
+                msgNivelSenha.setText("Fraca");
+                break;
+            case 1:
+                msgNivelSenha.setText("Média");
+                break;
+            case 2:
+                msgNivelSenha.setText("Forte");
+                break;
+        }
+
     }//GEN-LAST:event_txtSenhaKeyReleased
 
     private void txtEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmailActionPerformed
@@ -321,9 +446,16 @@ public class CadastroUsiario extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEmailActionPerformed
 
     public void limparCampos(){
-        
-     
-        
+        // Limpar campos
+        txtNome.setText("");
+        txtSobrenome .setText("");       
+        txtDataNascimento.setText("");
+        //ComboBoxSexo
+        txtEmail.setText("");
+        txtTelefone.setText("");
+        txtLogin.setText("");
+        txtSenha.setText("");
+  
     }
     
     
@@ -344,20 +476,22 @@ public class CadastroUsiario extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsiario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaCadastroUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsiario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaCadastroUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsiario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaCadastroUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroUsiario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TelaCadastroUsuario.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroUsiario().setVisible(true);
+                new TelaCadastroUsuario().setVisible(true);
+                
             }
         });
     }

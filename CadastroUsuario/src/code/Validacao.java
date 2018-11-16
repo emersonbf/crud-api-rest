@@ -88,14 +88,14 @@ public class Validacao {
         return status;
     }
     
-    // validar força da senha
-       public  int ValidaSenha (String senha) {
+    // validar força da senha ( ERRO Para algumas senhas ) ++++++++++++++
+    public  int ValidaSenha (String senha) {
         int status = 0; // -1= senha INVALIDA ( não pode cadastrar )
                         // 0 = Senha Fraca    ( pode cadastrar )  
                         // 1 = Senha Média    ( pode cadastrar )
                         // 2 = Senha Forte    ( pode cadastrar )
-       
-        String senhaFracaRegex  = "^(?=.*\\d)(?=.*[a-zA-Z])(?!.*[\\W_\\x7B-\\xFF]).{4,15}$";
+                                //"^(?=.*\\d)(?=.*[a-zA-Z])(?!.*[\\W_\\x7B-\\xFF]).{4,15}$"
+        String senhaFracaRegex  = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{4,}$";
         Pattern patternFraca = Pattern.compile(senhaFracaRegex);
         Matcher matcherFraca = patternFraca.matcher(senha);
         
@@ -107,33 +107,25 @@ public class Validacao {
         Pattern patternForte = Pattern.compile(senhaForteRegex);
         Matcher matcherForte = patternForte.matcher(senha);
         
-        
-        if( matcherForte.matches() ){
-            // Senha FORTE
-            // Deve Conter: Letras minúsculas, maiúsculas, números, caractere especial e minimo de 8 caracteres no total
-            status = 2;
+        if( matcherFraca.matches() ){
+            // Senha Fraca
+            // Deve Conter: maiúsculas, minúsculas e Number e minimo de 4 caracteres no total
+            status = 0;
         } else if( matcherMedio.matches() ) {
            // Senha Media
            // Deve Conter: maiúsculas, minúsculas e Number e minimo de 4 caracteres no total
             status = 1; 
-        }else if( matcherFraca.matches() ) {
-           // senha Media
-           // Deve Conter: maiúsculas, minúsculas e Number e minimo de 4 caracteres no total
-            status = 0; 
+        }else if( matcherForte.matches() ) {
+            // senha Media
+            // Deve Conter: Letras minúsculas, maiúsculas, números, caractere especial e minimo de 8 caracteres no total
+            status = 2; 
          }else {
             // Senha fraca
             // Não pode se cadastrar com uma senha tão fraca
             status = -1;
         }
-        
-     
-         
-        
+
         return status;
     } 
-    
-    
-    
-    
-    
+
 }
