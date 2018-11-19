@@ -5,8 +5,8 @@ Front-end: CadastroUsuario
 
 ============================================================ Banco de dados (MYSQL)
 ===================================================================================
-Local: Pasta Banca de Dados
-Nome do banco: restws;
+Local: crud-api-rest
+Nome do banco: restws.sql;
 Tabela: Pessoa;
 
 Configurações do banco, arquivo "hibernate.cfg.xml", no projeto RESTws.
